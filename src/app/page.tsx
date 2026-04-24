@@ -1,7 +1,5 @@
 import Link from 'next/link'
-import Image from 'next/image'
-import { Search, Sparkles, Heart, Users, Calendar, CreditCard, ArrowRight, Check } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
+import { Search, Sparkles, Gift, Users2, Wine, ArrowRight } from 'lucide-react'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { ExperienceCard } from '@/components/experience/ExperienceCard'
@@ -19,173 +17,212 @@ export default async function HomePage() {
   return (
     <>
       <Header />
-      <main>
+      <main className="bg-[#F5F2EC]">
         {/* HERO */}
-        <section className="relative overflow-hidden gradient-brand text-white">
-          <div className="container py-20 md:py-28 relative z-10">
-            <div className="max-w-4xl">
-              <h1 className="text-4xl md:text-6xl font-display font-bold leading-tight mb-6">
-                Réserve l&apos;expérience,
-                <br />
-                pas juste une table.
+        <section className="pt-16 pb-12 md:pt-24 md:pb-16">
+          <div className="container max-w-5xl">
+            <div className="max-w-3xl">
+              <span className="inline-block text-sm font-medium text-[#7C3AED] bg-violet-50 px-3 py-1 rounded-full mb-6">
+                Toulouse · Expériences de groupe
+              </span>
+              <h1 className="font-serif italic text-4xl md:text-[56px] leading-[1.1] text-[#141414] mb-6">
+                Vivez l&apos;expérience,<br />
+                pas juste la soirée.
               </h1>
-              <p className="text-lg md:text-xl opacity-95 mb-8 max-w-2xl">
-                La marketplace des expériences de groupe à Toulouse. EVJF, anniversaires,
-                team building — avec paiement splitté entre participants.
+              <p className="text-lg text-gray-600 mb-8 max-w-xl leading-relaxed">
+                La marketplace des expériences de groupe à Toulouse — avec paiement splitté entre participants en quelques clics.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button asChild size="lg" variant="secondary">
-                  <Link href="/toulouse">
-                    <Search className="w-5 h-5" />
-                    Découvrir les expériences
-                  </Link>
-                </Button>
-                <Button asChild size="lg" variant="outline" className="bg-white/10 border-white text-white hover:bg-white hover:text-brand-violet">
-                  <Link href="/pour-les-pros">Je suis un prestataire</Link>
-                </Button>
-              </div>
-
-              <div className="mt-10 flex items-center gap-6 text-sm opacity-90">
-                <span className="flex items-center gap-2">
-                  <Check className="w-4 h-4" /> Paiement sécurisé
-                </span>
-                <span className="flex items-center gap-2">
-                  <Check className="w-4 h-4" /> Split entre amis
-                </span>
-                <span className="flex items-center gap-2">
-                  <Check className="w-4 h-4" /> 100% Toulouse
-                </span>
+              {/* Search bar */}
+              <div className="flex items-center gap-3 bg-white rounded-2xl p-2 shadow-sm border border-[#EFEDE8] max-w-xl">
+                <Search className="w-5 h-5 text-gray-400 ml-2 flex-shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Escape game, cocktails, anniversaire…"
+                  className="flex-1 bg-transparent text-sm outline-none text-gray-700 placeholder-gray-400"
+                  readOnly
+                />
+                <Link
+                  href="/toulouse"
+                  className="flex-shrink-0 bg-[#7C3AED] text-white text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-[#6D28D9] transition-colors"
+                >
+                  Rechercher
+                </Link>
               </div>
             </div>
           </div>
-          <div className="absolute -right-20 top-10 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute -left-20 bottom-0 w-72 h-72 bg-brand-orange/30 rounded-full blur-3xl"></div>
         </section>
 
         {/* OCCASIONS */}
-        <section className="py-16 bg-gray-50">
-          <div className="container">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-3">
-                Pour quelle occasion ?
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Sélectionne ton occasion, on te montre les meilleures expériences adaptées.
-              </p>
-            </div>
-
+        <section className="py-12">
+          <div className="container max-w-5xl">
+            <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-6">
+              Pour quelle occasion ?
+            </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <OccasionCard
                 href="/toulouse/evjf"
-                emoji="👰"
+                icon={<Sparkles className="w-5 h-5 text-white" />}
                 title="EVJF"
                 description="Enterrement de vie de jeune fille"
+                gradient="from-violet-600 to-purple-500"
               />
               <OccasionCard
                 href="/toulouse/anniversaire"
-                emoji="🎂"
+                icon={<Gift className="w-5 h-5 text-white" />}
                 title="Anniversaire"
                 description="Marque le coup entre amis"
+                gradient="from-orange-500 to-orange-400"
               />
               <OccasionCard
                 href="/toulouse/team-building"
-                emoji="🤝"
+                icon={<Users2 className="w-5 h-5 text-white" />}
                 title="Team building"
                 description="Cohésion d'équipe"
+                gradient="from-violet-500 to-orange-500"
               />
               <OccasionCard
                 href="/toulouse"
-                emoji="🎉"
+                icon={<Wine className="w-5 h-5 text-white" />}
                 title="Entre amis"
                 description="Juste pour le plaisir"
+                gradient="from-purple-500 to-violet-600"
               />
             </div>
           </div>
         </section>
 
         {/* EXPÉRIENCES À LA UNE */}
-        {experiences && experiences.length > 0 && (
-          <section className="py-16">
-            <div className="container">
-              <div className="flex items-end justify-between mb-10">
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-display font-bold mb-2">
-                    Les expériences du moment
-                  </h2>
-                  <p className="text-gray-600">À Toulouse, sélectionnées pour toi.</p>
-                </div>
-                <Link
-                  href="/toulouse"
-                  className="hidden md:inline-flex items-center gap-2 text-brand-violet font-semibold hover:underline"
-                >
-                  Voir tout <ArrowRight className="w-4 h-4" />
-                </Link>
+        <section className="py-12">
+          <div className="container max-w-5xl">
+            <div className="flex items-end justify-between mb-8">
+              <div>
+                <h2 className="font-serif italic text-3xl md:text-4xl text-[#141414] mb-1">
+                  Les expériences du moment
+                </h2>
+                <p className="text-gray-500 text-sm">À Toulouse, sélectionnées pour toi.</p>
               </div>
+              <Link
+                href="/toulouse"
+                className="hidden md:inline-flex items-center gap-1.5 text-[#7C3AED] text-sm font-medium hover:underline"
+              >
+                Voir tout <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
 
+            {experiences && experiences.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {experiences.map((exp: any) => (
                   <ExperienceCard key={exp.id} experience={exp} />
                 ))}
               </div>
+            ) : (
+              <div className="text-center py-16 text-gray-400">
+                <p className="mb-2">Le catalogue arrive bientôt.</p>
+                <p className="text-sm">Inscris-toi à la liste d&apos;attente pour être prévenu !</p>
+              </div>
+            )}
 
-              <div className="md:hidden mt-8 text-center">
-                <Button asChild variant="outline">
-                  <Link href="/toulouse">
-                    Voir toutes les expériences <ArrowRight className="w-4 h-4" />
+            <div className="md:hidden mt-6 text-center">
+              <Link href="/toulouse" className="inline-flex items-center gap-2 text-[#7C3AED] text-sm font-medium">
+                Voir toutes les expériences <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* SPLIT PAYMENT */}
+        <section className="py-12">
+          <div className="container max-w-5xl">
+            <div className="bg-[#141414] rounded-3xl p-8 md:p-14">
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                  <span className="inline-block text-xs font-semibold text-[#F97316] uppercase tracking-widest mb-4">
+                    Notre super-pouvoir
+                  </span>
+                  <h2 className="font-serif italic text-3xl md:text-4xl text-white mb-5 leading-tight">
+                    Une réservation.<br />Une addition partagée.
+                  </h2>
+                  <p className="text-gray-400 mb-8 leading-relaxed text-sm">
+                    Fini l&apos;organisatrice qui avance pour tout le monde. Chaque participant reçoit un lien et paie directement sa part — en 30 secondes.
+                  </p>
+                  <Link
+                    href="/toulouse"
+                    className="inline-flex items-center gap-2 bg-[#F97316] text-white text-sm font-medium px-6 py-3 rounded-xl hover:bg-[#EA580C] transition-colors"
+                  >
+                    Tester maintenant <ArrowRight className="w-4 h-4" />
                   </Link>
-                </Button>
+                </div>
+
+                <div className="space-y-3">
+                  {[
+                    { label: 'Léa (organisatrice)', amount: '55€', paid: true },
+                    { label: 'Marie', amount: '55€', paid: true },
+                    { label: 'Sophie', amount: '55€', paid: false },
+                    { label: 'Camille', amount: '55€', paid: false },
+                  ].map((p) => (
+                    <div key={p.label} className="flex items-center justify-between bg-white/5 rounded-xl px-5 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full flex-shrink-0 ${p.paid ? 'bg-green-400' : 'bg-gray-600'}`} />
+                        <span className="text-white text-sm">{p.label}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-gray-400 text-sm">{p.amount}</span>
+                        <span className={`text-xs px-2.5 py-0.5 rounded-full ${p.paid ? 'bg-green-400/20 text-green-400' : 'bg-white/10 text-gray-400'}`}>
+                          {p.paid ? 'Payé' : 'En attente'}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
-        {/* COMMENT CA MARCHE */}
-        <section className="py-20 bg-gray-50">
-          <div className="container">
+        {/* HOW IT WORKS */}
+        <section className="py-16">
+          <div className="container max-w-5xl">
             <div className="text-center mb-14">
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-3">
-                Comment ça marche ?
+              <h2 className="font-serif italic text-3xl md:text-4xl text-[#141414] mb-3">
+                Trois étapes. Zéro galère.
               </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                3 étapes, zéro galère. C&apos;est le but.
-              </p>
+              <p className="text-gray-500 text-sm">C&apos;est le but.</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              <Step
-                number="1"
-                icon={<Search className="w-6 h-6" />}
+            <div className="grid md:grid-cols-3 gap-8">
+              <HowItWorksStep
+                number="01"
                 title="Choisis ton expérience"
-                description="Parcours les expériences disponibles à Toulouse. Filtre par occasion, date, nombre de personnes."
+                description="Parcours le catalogue, filtre par occasion, nombre de personnes et budget."
               />
-              <Step
-                number="2"
-                icon={<CreditCard className="w-6 h-6" />}
-                title="Réserve et paie ta part"
-                description="Paiement en ligne sécurisé. Active le paiement splitté pour que chaque participant paie directement."
+              <HowItWorksStep
+                number="02"
+                title="Réserve et partage"
+                description="Paie ta part et envoie le lien aux participants — chacun règle directement."
               />
-              <Step
-                number="3"
-                icon={<Sparkles className="w-6 h-6" />}
+              <HowItWorksStep
+                number="03"
                 title="Profite du moment"
-                description="On envoie la confirmation, on te rappelle la veille. Tu te concentres sur l'essentiel : t'amuser."
+                description="On gère tout. Confirmations, rappels, contact prestataire. Toi tu te concentres sur le fun."
               />
             </div>
           </div>
         </section>
 
         {/* WAITLIST */}
-        <section className="py-20 gradient-brand text-white">
-          <div className="container">
-            <div className="max-w-2xl mx-auto text-center">
-              <Heart className="w-12 h-12 mx-auto mb-6" />
-              <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-                Reste informé du lancement
+        <section className="py-12 pb-20">
+          <div className="container max-w-5xl">
+            <div className="bg-[#FFF7EF] border border-orange-100 rounded-3xl p-10 md:p-16 text-center">
+              <p className="text-sm font-medium text-orange-500 mb-3">
+                +847 Toulousains sur la liste
+              </p>
+              <h2 className="font-serif italic text-3xl md:text-4xl text-[#141414] mb-4">
+                Sois parmi les premiers
               </h2>
-              <p className="text-lg opacity-95 mb-8">
-                On agrandit le catalogue chaque semaine. Reçois les nouveautés et un code
-                promo de -15% pour ta première réservation.
+              <p className="text-gray-600 mb-8 max-w-md mx-auto text-sm leading-relaxed">
+                On agrandit le catalogue chaque semaine. Reçois les nouveautés et un code promo de{' '}
+                <strong>-15%</strong> pour ta première réservation.
               </p>
               <WaitlistForm />
             </div>
@@ -199,50 +236,48 @@ export default async function HomePage() {
 
 function OccasionCard({
   href,
-  emoji,
+  icon,
   title,
   description,
+  gradient,
 }: {
   href: string
-  emoji: string
+  icon: React.ReactNode
   title: string
   description: string
+  gradient: string
 }) {
   return (
-    <Link
-      href={href}
-      className="group block p-6 bg-white rounded-xl border border-gray-200 hover:border-brand-violet hover:shadow-lg transition-all text-center"
-    >
-      <div className="text-5xl mb-3">{emoji}</div>
-      <h3 className="font-display font-bold text-lg mb-1 group-hover:text-brand-violet transition-colors">
-        {title}
-      </h3>
-      <p className="text-sm text-gray-600">{description}</p>
+    <Link href={href} className="group block">
+      <div
+        className={`bg-gradient-to-br ${gradient} rounded-2xl p-5 mb-3 aspect-square flex flex-col justify-between group-hover:scale-[1.02] transition-transform duration-200`}
+      >
+        <div className="w-9 h-9 bg-white/25 rounded-xl flex items-center justify-center">
+          {icon}
+        </div>
+        <h3 className="font-semibold text-white text-lg">{title}</h3>
+      </div>
+      <p className="text-xs text-gray-500 leading-snug">{description}</p>
     </Link>
   )
 }
 
-function Step({
+function HowItWorksStep({
   number,
-  icon,
   title,
   description,
 }: {
   number: string
-  icon: React.ReactNode
   title: string
   description: string
 }) {
   return (
-    <div className="relative">
-      <div className="flex items-center gap-4 mb-4">
-        <div className="flex-shrink-0 w-12 h-12 rounded-full gradient-brand text-white flex items-center justify-center font-display font-bold text-xl">
-          {number}
-        </div>
-        <div className="flex items-center gap-2 text-brand-violet">{icon}</div>
+    <div>
+      <div className="font-serif italic text-[64px] leading-none text-[#EFEDE8] mb-4 select-none">
+        {number}
       </div>
-      <h3 className="font-display font-bold text-xl mb-2">{title}</h3>
-      <p className="text-gray-600">{description}</p>
+      <h3 className="font-semibold text-[#141414] text-base mb-2">{title}</h3>
+      <p className="text-gray-500 text-sm leading-relaxed">{description}</p>
     </div>
   )
 }

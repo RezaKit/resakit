@@ -1,39 +1,27 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/Button'
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/90 backdrop-blur-sm">
-      <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl font-display font-bold text-gradient-brand">
-            ResaKit
+    <header className="sticky top-0 z-50 w-full border-b border-[#EFEDE8] bg-white/95 backdrop-blur-sm">
+      <div className="container max-w-5xl flex h-16 items-center justify-between">
+        <Link href="/" className="flex items-center">
+          <span className="font-serif italic text-[28px] leading-none">
+            <span className="text-[#141414]">Resa</span>
+            <span className="text-[#7C3AED]">kit</span>
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8">
-          <Link
-            href="/toulouse/evjf"
-            className="text-sm font-medium text-gray-700 hover:text-brand-violet transition-colors"
-          >
+        <nav className="hidden md:flex items-center gap-7">
+          <Link href="/toulouse/evjf" className="text-sm font-medium text-gray-600 hover:text-[#141414] transition-colors">
             EVJF
           </Link>
-          <Link
-            href="/toulouse/anniversaire"
-            className="text-sm font-medium text-gray-700 hover:text-brand-violet transition-colors"
-          >
+          <Link href="/toulouse/anniversaire" className="text-sm font-medium text-gray-600 hover:text-[#141414] transition-colors">
             Anniversaire
           </Link>
-          <Link
-            href="/toulouse/team-building"
-            className="text-sm font-medium text-gray-700 hover:text-brand-violet transition-colors"
-          >
+          <Link href="/toulouse/team-building" className="text-sm font-medium text-gray-600 hover:text-[#141414] transition-colors">
             Team building
           </Link>
-          <Link
-            href="/toulouse"
-            className="text-sm font-medium text-gray-700 hover:text-brand-violet transition-colors"
-          >
+          <Link href="/toulouse" className="text-sm font-medium text-gray-600 hover:text-[#141414] transition-colors">
             Toutes les expériences
           </Link>
         </nav>
@@ -41,13 +29,16 @@ export function Header() {
         <div className="flex items-center gap-3">
           <Link
             href="/pour-les-pros"
-            className="hidden sm:block text-sm font-medium text-gray-700 hover:text-brand-violet transition-colors"
+            className="hidden sm:block text-sm font-medium text-gray-600 hover:text-[#141414] transition-colors"
           >
             Pour les pros
           </Link>
-          <Button asChild size="sm">
-            <Link href="/login">Se connecter</Link>
-          </Button>
+          <Link
+            href="/login"
+            className="text-sm font-medium bg-[#7C3AED] text-white px-4 py-2 rounded-xl hover:bg-[#6D28D9] transition-colors"
+          >
+            Se connecter
+          </Link>
         </div>
       </div>
     </header>
