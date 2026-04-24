@@ -17,7 +17,7 @@ export default async function HomePage() {
   return (
     <>
       <Header />
-      <main className="bg-[#F5F2EC]">
+      <main className="bg-[#F5F2EC] pb-16 md:pb-0">
         {/* HERO */}
         <section className="pt-16 pb-12 md:pt-24 md:pb-16">
           <div className="container max-w-5xl">

@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { Metadata } from 'next'
+import { Search, SlidersHorizontal } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
@@ -7,23 +9,30 @@ import { ExperienceCard } from '@/components/experience/ExperienceCard'
 
 interface PageProps {
   params: { city: string }
-  searchParams: { occasion?: string; min_price?: string; max_price?: string }
+  searchParams: { occasion?: string }
 }
+
+const OCCASIONS = [
+  { value: '', label: 'Tout voir' },
+  { value: 'EVJF', label: 'EVJF' },
+  { value: 'EVG', label: 'EVG' },
+  { value: 'Anniversaire', label: 'Anniversaire' },
+  { value: 'Team building', label: 'Team building' },
+  { value: 'Entre amis', label: 'Entre amis' },
+  { value: 'Soirée', label: 'Soirée' },
+]
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const city = capitalize(params.city)
   return {
     title: `Expériences de groupe à ${city}`,
-    description: `Trouve et réserve une expérience à ${city} : EVJF, anniversaires, team building. Escape games, ateliers cocktails, cours de cuisine et plus.`,
+    description: `EVJF, anniversaires, team building à ${city}. Réservation et paiement partagé entre participants.`,
   }
 }
 
 export default async function CityPage({ params, searchParams }: PageProps) {
   const city = capitalize(params.city)
-
-  if (!['Toulouse', 'Bordeaux', 'Lyon', 'Paris', 'Marseille'].includes(city)) {
-    notFound()
-  }
+  if (!['Toulouse', 'Bordeaux', 'Lyon', 'Paris', 'Marseille'].includes(city)) notFound()
 
   const supabase = createClient()
   let query = supabase
@@ -37,43 +46,81 @@ export default async function CityPage({ params, searchParams }: PageProps) {
   }
 
   const { data: experiences } = await query
+  const count = experiences?.length ?? 0
 
   return (
     <>
       <Header />
-      <main>
-        <section className="bg-gray-50 py-12">
-          <div className="container">
-            <h1 className="text-4xl font-display font-bold mb-3">
-              Expériences de groupe à {city}
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl">
-              {experiences?.length ?? 0} expériences disponibles pour tes EVJF,
-              anniversaires et team building.
-            </p>
+      <main className="bg-[#F5F2EC] min-h-screen pb-24 md:pb-0">
+        {/* Search bar top */}
+        <div className="bg-white border-b border-[#EFEDE8] px-5 py-3">
+          <div className="flex items-center gap-2 bg-[#F5F2EC] rounded-xl px-3 py-2.5">
+            <Search className="w-4 h-4 text-[#8A8880] flex-shrink-0" />
+            <span className="text-sm text-[#8A8880] flex-1">Escape game, cocktails…</span>
+            <SlidersHorizontal className="w-4 h-4 text-[#8A8880]" />
           </div>
-        </section>
+        </div>
 
-        <section className="py-10">
-          <div className="container">
-            {experiences && experiences.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {experiences.map((exp: any) => (
-                  <ExperienceCard key={exp.id} experience={exp} city={params.city} />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-20">
-                <p className="text-gray-500 text-lg mb-4">
-                  Aucune expérience disponible pour cette recherche.
-                </p>
-                <p className="text-gray-400">
-                  On ajoute de nouveaux prestataires chaque semaine. Reviens bientôt !
-                </p>
-              </div>
-            )}
+        {/* Occasion tabs */}
+        <div className="bg-white border-b border-[#EFEDE8] overflow-x-auto">
+          <div className="flex gap-0 px-4 w-max min-w-full">
+            {OCCASIONS.map((occ) => {
+              const isActive = (searchParams.occasion ?? '') === occ.value
+              return (
+                <Link
+                  key={occ.value}
+                  href={occ.value ? `/${params.city}?occasion=${occ.value}` : `/${params.city}`}
+                  className={`px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+                    isActive
+                      ? 'border-[#7C3AED] text-[#7C3AED]'
+                      : 'border-transparent text-[#6B6960] hover:text-[#141414]'
+                  }`}
+                >
+                  {occ.label}
+                </Link>
+              )
+            })}
           </div>
-        </section>
+        </div>
+
+        <div className="px-5 pt-5 pb-4">
+          <p className="text-xs font-semibold text-[#8A8880] uppercase tracking-widest">
+            {count} expérience{count > 1 ? 's' : ''} à {city}
+          </p>
+        </div>
+
+        {/* Grid */}
+        <div className="px-5 pb-6">
+          {experiences && experiences.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {experiences.map((exp: any) => (
+                <ExperienceCard key={exp.id} experience={exp} city={params.city} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="w-20 h-20 rounded-2xl bg-white border border-[#EFEDE8] flex items-center justify-center mb-4">
+                <Search className="w-8 h-8 text-[#8A8880]" />
+              </div>
+              <p className="font-serif italic text-2xl text-[#141414] mb-2">
+                Aucune expérience
+              </p>
+              <p className="text-sm text-[#6B6960] mb-6 max-w-xs">
+                {searchParams.occasion
+                  ? `Pas encore d'expérience pour "${searchParams.occasion}" à ${city}.`
+                  : `On agrandit le catalogue chaque semaine. Reviens bientôt !`}
+              </p>
+              {searchParams.occasion && (
+                <Link
+                  href={`/${params.city}`}
+                  className="text-sm font-semibold text-[#7C3AED] hover:underline"
+                >
+                  Voir toutes les expériences
+                </Link>
+              )}
+            </div>
+          )}
+        </div>
       </main>
       <Footer />
     </>

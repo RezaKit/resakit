@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Metadata } from 'next'
-import { Clock, Users, MapPin, Check, Info, Calendar } from 'lucide-react'
+import { Clock, Users, MapPin, Star, SplitSquareVertical, ArrowLeft, ChevronRight, Check, Info, Calendar } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { Badge } from '@/components/ui/Badge'
 import { BookingWidget } from '@/components/booking/BookingWidget'
 import { formatPrice, formatDuration, getCategoryLabel } from '@/lib/utils'
 
@@ -15,14 +15,8 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const supabase = createClient()
-  const { data: exp } = await supabase
-    .from('experiences')
-    .select('*')
-    .eq('slug', params.slug)
-    .single()
-
+  const { data: exp } = await supabase.from('experiences').select('*').eq('slug', params.slug).single()
   if (!exp) return { title: 'Expérience introuvable' }
-
   return {
     title: exp.seo_title || `${exp.title} à Toulouse`,
     description: exp.seo_description || exp.short_description || undefined,
@@ -61,119 +55,151 @@ export default async function ExperiencePage({ params }: PageProps) {
     .eq('experience_id', experience.id)
     .eq('is_published', true)
     .order('created_at', { ascending: false })
-    .limit(10)
+    .limit(6)
 
   const mainPhoto = experience.photos?.[0] || 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=1200'
+
+  const priceDisplay = experience.price_per_person
+    ? `${formatPrice(experience.price_per_person)}/pers`
+    : experience.price_fixed
+    ? formatPrice(experience.price_fixed)
+    : 'Sur devis'
 
   return (
     <>
       <Header />
-      <main>
-        {/* Gallery */}
-        <section className="bg-gray-50">
-          <div className="container py-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 rounded-xl overflow-hidden">
-              <div className="md:col-span-2 relative aspect-[4/3] md:aspect-[16/10] bg-gray-100">
-                <Image src={mainPhoto} alt={experience.title} fill className="object-cover" priority />
-              </div>
-              <div className="hidden md:flex flex-col gap-3">
-                {experience.photos?.slice(1, 3).map((photo: string, i: number) => (
-                  <div key={i} className="relative flex-1 bg-gray-100 min-h-[140px]">
-                    <Image src={photo} alt={`${experience.title} ${i + 2}`} fill className="object-cover" />
-                  </div>
-                ))}
-              </div>
-            </div>
+      <main className="bg-[#F5F2EC] pb-32 md:pb-0">
+
+        {/* Hero image — mobile full bleed */}
+        <div className="relative h-[280px] md:h-[420px] bg-gray-900">
+          <Image
+            src={mainPhoto}
+            alt={experience.title}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/30" />
+
+          {/* Back button */}
+          <Link
+            href={`/${params.city}`}
+            className="absolute top-4 left-4 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Link>
+
+          {/* Category badge */}
+          <div className="absolute top-4 right-4">
+            <span className="bg-white/95 backdrop-blur-sm text-[#141414] text-xs font-semibold px-2.5 py-1 rounded-lg">
+              {getCategoryLabel(experience.tags?.[0] || '')}
+            </span>
           </div>
-        </section>
 
-        <section className="container py-10">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Contenu principal */}
-            <div className="lg:col-span-2">
-              <div className="flex flex-wrap items-center gap-2 mb-4">
-                <Badge variant="default">{getCategoryLabel(experience.provider?.category || '')}</Badge>
-                {experience.occasions?.map((occ: string) => (
-                  <Badge key={occ} variant="muted">{occ}</Badge>
-                ))}
+          {/* Title overlay */}
+          <div className="absolute bottom-4 left-4 right-4 text-white">
+            {experience.provider && (
+              <p className="text-xs font-medium opacity-80 mb-1">{experience.provider.name}</p>
+            )}
+            <h1 className="font-serif italic text-2xl md:text-3xl leading-tight">
+              {experience.title}
+            </h1>
+            {experience.rating_count > 0 && (
+              <div className="flex items-center gap-1.5 mt-2">
+                <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+                <span className="text-sm font-semibold">{experience.rating_average}</span>
+                <span className="text-xs opacity-70">({experience.rating_count} avis)</span>
               </div>
+            )}
+          </div>
+        </div>
 
-              <h1 className="text-3xl md:text-4xl font-display font-bold mb-4">
-                {experience.title}
-              </h1>
+        {/* Split payment CTA band */}
+        <div className="bg-[#7C3AED] px-5 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-white">
+            <SplitSquareVertical className="w-4 h-4 flex-shrink-0" />
+            <span className="text-sm font-medium">Paiement partagé entre participants</span>
+          </div>
+          <span className="text-white/70 text-xs">En savoir +</span>
+        </div>
 
-              {experience.provider && (
-                <p className="text-gray-600 mb-6">
-                  par <span className="font-semibold">{experience.provider.name}</span>
-                </p>
-              )}
+        <div className="container max-w-5xl py-6 md:py-10">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-              <div className="flex flex-wrap gap-6 text-gray-700 mb-8 pb-8 border-b border-gray-200">
+            {/* Content */}
+            <div className="lg:col-span-2 space-y-5">
+
+              {/* Quick info grid */}
+              <div className="grid grid-cols-2 gap-3">
                 {experience.duration_minutes && (
-                  <span className="flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-brand-violet" />
-                    {formatDuration(experience.duration_minutes)}
-                  </span>
+                  <InfoBox label="Durée" value={formatDuration(experience.duration_minutes)} />
                 )}
-                <span className="flex items-center gap-2">
-                  <Users className="w-5 h-5 text-brand-violet" />
-                  {experience.min_people} à {experience.max_people} personnes
-                </span>
+                <InfoBox label="Groupe" value={`${experience.min_people}–${experience.max_people} pers`} />
                 {(experience.address || experience.provider?.address) && (
-                  <span className="flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-brand-violet" />
-                    {experience.address || experience.provider?.address}
-                  </span>
+                  <InfoBox label="Lieu" value={experience.address || experience.provider?.address} />
                 )}
+                <InfoBox label="Prix" value={priceDisplay} accent />
               </div>
 
-              <div className="prose prose-gray max-w-none mb-10">
-                <h2 className="text-2xl font-display font-bold mb-3">À propos</h2>
-                <p className="whitespace-pre-line">{experience.description}</p>
+              {/* Description */}
+              <div className="bg-white rounded-2xl p-5 border border-[#EFEDE8]">
+                <h2 className="font-semibold text-[#141414] mb-3">À propos</h2>
+                <p className="text-sm text-[#6B6960] leading-relaxed whitespace-pre-line">
+                  {experience.description || experience.short_description}
+                </p>
               </div>
 
+              {/* Included */}
               {experience.what_included && (
-                <div className="bg-green-50 rounded-xl p-6 mb-6">
-                  <h3 className="font-display font-bold text-lg mb-3 flex items-center gap-2">
-                    <Check className="w-5 h-5 text-green-600" />
-                    Ce qui est inclus
-                  </h3>
-                  <p className="text-gray-700 whitespace-pre-line">{experience.what_included}</p>
+                <div className="bg-white rounded-2xl p-5 border border-[#EFEDE8]">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-green-600" />
+                    </div>
+                    <h3 className="font-semibold text-[#141414]">Ce qui est inclus</h3>
+                  </div>
+                  <p className="text-sm text-[#6B6960] leading-relaxed whitespace-pre-line">{experience.what_included}</p>
                 </div>
               )}
 
+              {/* To bring */}
               {experience.what_to_bring && (
-                <div className="bg-blue-50 rounded-xl p-6 mb-6">
-                  <h3 className="font-display font-bold text-lg mb-3 flex items-center gap-2">
-                    <Info className="w-5 h-5 text-blue-600" />
-                    À prévoir
-                  </h3>
-                  <p className="text-gray-700 whitespace-pre-line">{experience.what_to_bring}</p>
+                <div className="bg-white rounded-2xl p-5 border border-[#EFEDE8]">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Info className="w-4 h-4 text-[#7C3AED]" />
+                    <h3 className="font-semibold text-[#141414]">À prévoir</h3>
+                  </div>
+                  <p className="text-sm text-[#6B6960] leading-relaxed whitespace-pre-line">{experience.what_to_bring}</p>
                 </div>
               )}
 
+              {/* Cancellation */}
               {experience.cancellation_policy && (
-                <div className="bg-gray-50 rounded-xl p-6 mb-10">
-                  <h3 className="font-display font-bold text-lg mb-3 flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-gray-600" />
-                    Politique d&apos;annulation
-                  </h3>
-                  <p className="text-gray-700">{experience.cancellation_policy}</p>
+                <div className="bg-white rounded-2xl p-5 border border-[#EFEDE8]">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Calendar className="w-4 h-4 text-[#8A8880]" />
+                    <h3 className="font-semibold text-[#141414]">Annulation</h3>
+                  </div>
+                  <p className="text-sm text-[#6B6960]">{experience.cancellation_policy}</p>
                 </div>
               )}
 
-              {/* Avis */}
+              {/* Reviews */}
               {reviews && reviews.length > 0 && (
                 <div>
-                  <h2 className="text-2xl font-display font-bold mb-6">Avis clients</h2>
-                  <div className="space-y-4">
+                  <h2 className="font-semibold text-[#141414] mb-3">Avis</h2>
+                  <div className="space-y-3">
                     {reviews.map((r) => (
-                      <div key={r.id} className="border border-gray-200 rounded-xl p-5">
+                      <div key={r.id} className="bg-white rounded-2xl p-4 border border-[#EFEDE8]">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="font-semibold">{r.author_name}</span>
-                          <span className="text-yellow-500">{'⭐'.repeat(r.rating)}</span>
+                          <span className="text-sm font-semibold text-[#141414]">{r.author_name}</span>
+                          <div className="flex items-center gap-0.5">
+                            {Array.from({ length: r.rating }).map((_, i) => (
+                              <Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                            ))}
+                          </div>
                         </div>
-                        {r.comment && <p className="text-gray-700">{r.comment}</p>}
+                        {r.comment && <p className="text-sm text-[#6B6960] leading-relaxed">{r.comment}</p>}
                       </div>
                     ))}
                   </div>
@@ -181,16 +207,49 @@ export default async function ExperiencePage({ params }: PageProps) {
               )}
             </div>
 
-            {/* Booking Widget */}
-            <div className="lg:col-span-1">
-              <div className="lg:sticky lg:top-24">
+            {/* Booking widget — desktop only */}
+            <div className="hidden lg:block lg:col-span-1">
+              <div className="sticky top-24">
                 <BookingWidget experience={experience} slots={slots || []} />
               </div>
             </div>
           </div>
-        </section>
+        </div>
+
+        {/* Sticky CTA — mobile only */}
+        <div className="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-[#EFEDE8] p-4 pb-20 md:hidden">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <span className="text-xl font-bold text-[#7C3AED]">{priceDisplay}</span>
+              {experience.price_per_person && (
+                <p className="text-xs text-[#8A8880]">par personne</p>
+              )}
+            </div>
+            {experience.rating_count > 0 && (
+              <div className="flex items-center gap-1">
+                <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+                <span className="text-sm font-semibold text-[#141414]">{experience.rating_average}</span>
+              </div>
+            )}
+          </div>
+          <Link
+            href={`/book/${experience.id}`}
+            className="block w-full bg-[#7C3AED] text-white text-center text-sm font-semibold py-3.5 rounded-xl hover:bg-[#6D28D9] transition-colors"
+          >
+            Réserver & inviter mon groupe
+          </Link>
+        </div>
       </main>
       <Footer />
     </>
+  )
+}
+
+function InfoBox({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
+  return (
+    <div className="bg-white rounded-xl p-3 border border-[#EFEDE8]">
+      <p className="text-[10px] font-bold text-[#8A8880] uppercase tracking-wider mb-1">{label}</p>
+      <p className={`text-sm font-semibold ${accent ? 'text-[#7C3AED]' : 'text-[#141414]'}`}>{value}</p>
+    </div>
   )
 }

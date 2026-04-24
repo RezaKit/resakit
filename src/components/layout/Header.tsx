@@ -1,7 +1,9 @@
 import Link from 'next/link'
+import { MobileNav } from './MobileNav'
 
 export function Header() {
   return (
+    <>
     <header className="sticky top-0 z-50 w-full border-b border-[#EFEDE8] bg-white/95 backdrop-blur-sm">
       <div className="container max-w-5xl flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center">
@@ -42,5 +44,7 @@ export function Header() {
         </div>
       </div>
     </header>
+    <MobileNav />
+    </>
   )
 }
