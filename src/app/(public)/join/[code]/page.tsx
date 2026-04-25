@@ -40,9 +40,9 @@ export default async function JoinPage({ params }: PageProps) {
   const shareUrl = `${appUrl}/join/${params.code}`
 
   return (
-    <main className="bg-white min-h-screen pb-32 pt-[62px]">
+    <main className="bg-white min-h-screen pb-32 md:pb-16 pt-[62px]">
       {/* TopBar */}
-      <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-[#F2F0EC]">
+      <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-[#F2F0EC] md:max-w-2xl md:mx-auto">
         <Link
           href="/"
           className="w-[38px] h-[38px] rounded-full border border-[#EFEDE8] bg-white flex items-center justify-center"
@@ -56,6 +56,9 @@ export default async function JoinPage({ params }: PageProps) {
         </span>
         <div className="w-[38px]" />
       </div>
+
+      {/* Content container */}
+      <div className="md:max-w-2xl md:mx-auto">
 
       {/* Progress hero — dark gradient card */}
       <div className="px-5 pt-5 pb-1.5">
@@ -288,9 +291,9 @@ export default async function JoinPage({ params }: PageProps) {
         </div>
       )}
 
-      {/* Sticky CTA */}
+      {/* CTA — sticky on mobile, inline on desktop */}
       <div
-        className="fixed bottom-0 inset-x-0 px-5 pb-[34px] pt-[14px]"
+        className="fixed bottom-0 inset-x-0 md:relative md:bottom-auto md:inset-x-auto md:mt-6 px-5 pb-[34px] pt-[14px] md:pb-[14px]"
         style={{
           background: 'rgba(255,255,255,0.96)',
           backdropFilter: 'blur(16px)',
@@ -303,6 +306,8 @@ export default async function JoinPage({ params }: PageProps) {
         >
           Voir ma réservation
         </Link>
+      </div>
+
       </div>
     </main>
   )

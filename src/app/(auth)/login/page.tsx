@@ -3,55 +3,107 @@ import { LoginForm } from '@/components/LoginForm'
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen bg-[#F5F2EC] flex flex-col">
-      <div className="flex-1 flex flex-col px-6 pt-16 pb-10 max-w-md mx-auto w-full">
-        {/* Logo */}
-        <div className="mb-8">
-          <Link href="/" className="flex items-baseline gap-0.5">
-            <span className="font-serif italic text-3xl text-[#141414]">Resa</span>
-            <span className="font-serif italic text-3xl text-[#7C3AED]">kit.</span>
-          </Link>
+    <main className="min-h-screen md:flex">
+      {/* Desktop left panel */}
+      <div className="hidden md:flex md:w-1/2 bg-[#141414] flex-col justify-between p-14 xl:p-20">
+        <Link href="/" className="flex items-baseline gap-0.5">
+          <span className="font-serif italic text-4xl text-white">Resa</span>
+          <span className="font-serif italic text-4xl text-[#7C3AED]">kit.</span>
+        </Link>
+
+        <div>
+          <h2 className="font-serif italic text-[52px] xl:text-[60px] leading-[0.95] text-white mb-8" style={{ letterSpacing: -1.5 }}>
+            L&apos;app qui <em className="text-[#7C3AED]">organise</em> à ta place.
+          </h2>
+          <div className="flex flex-col gap-4">
+            {[
+              { icon: '💸', title: 'Paiement partagé', desc: 'Chaque participant paie sa part. Pas d\'avances.' },
+              { icon: '⚡', title: 'Confirmation instantanée', desc: 'Booking confirmé en 30 secondes, pas en 3 jours.' },
+              { icon: '🎉', title: 'Zéro stress', desc: 'On gère les relances, les SMS, les rappels.' },
+            ].map((f) => (
+              <div key={f.title} className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-xl flex-shrink-0">
+                  {f.icon}
+                </div>
+                <div>
+                  <div className="text-[14px] font-semibold text-white">{f.title}</div>
+                  <div className="text-[13px] text-white/55 mt-0.5 leading-relaxed">{f.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <h1 className="font-serif italic text-[38px] leading-none text-[#141414] mb-2">
-          Bon retour <em className="text-[#7C3AED]">parmi nous</em>
-        </h1>
-        <p className="text-sm text-[#6B6960] mb-8">Connecte-toi pour accéder à tes réservations</p>
-
-        {/* Social buttons */}
-        <div className="flex flex-col gap-3 mb-6">
-          <button className="w-full flex items-center justify-center gap-3 px-4 py-3.5 bg-white border border-[#EFEDE8] rounded-xl text-sm font-medium text-[#141414] hover:bg-gray-50 transition-colors">
-            <GoogleIcon />
-            Continuer avec Google
-          </button>
-          <button className="w-full flex items-center justify-center gap-3 px-4 py-3.5 bg-[#141414] rounded-xl text-sm font-medium text-white hover:bg-black transition-colors">
-            <AppleIcon />
-            Continuer avec Apple
-          </button>
+        <div className="p-5 rounded-2xl bg-white/6 border border-white/10">
+          <p className="text-[13.5px] text-white/80 leading-relaxed italic">
+            &ldquo;On a organisé notre EVJF pour 12 en moins d&apos;une heure. Chacune a payé sa part, zéro prise de tête.&rdquo;
+          </p>
+          <div className="flex items-center gap-3 mt-4">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#7C3AED] to-[#F97316] flex items-center justify-center text-[12px] font-bold text-white">
+              S
+            </div>
+            <div>
+              <div className="text-[13px] font-semibold text-white">Sarah M.</div>
+              <div className="text-[11px] text-white/45">EVJF · Toulouse · 12 personnes</div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        {/* Divider */}
-        <div className="flex items-center gap-3 mb-6 text-[#8A8880] text-xs">
-          <div className="flex-1 h-px bg-[#EFEDE8]" />
-          <span>ou</span>
-          <div className="flex-1 h-px bg-[#EFEDE8]" />
+      {/* Right form panel */}
+      <div className="flex-1 bg-[#F5F2EC] flex flex-col min-h-screen md:min-h-0 md:justify-center">
+        <div className="flex-1 flex flex-col px-6 pt-16 pb-10 md:flex-none md:px-12 lg:px-16 xl:px-20 md:py-16 max-w-md md:max-w-none md:w-full mx-auto md:mx-0">
+
+          {/* Mobile logo */}
+          <div className="mb-8 md:hidden">
+            <Link href="/" className="flex items-baseline gap-0.5">
+              <span className="font-serif italic text-3xl text-[#141414]">Resa</span>
+              <span className="font-serif italic text-3xl text-[#7C3AED]">kit.</span>
+            </Link>
+          </div>
+
+          <div className="md:max-w-sm">
+            <h1 className="font-serif italic text-[38px] leading-none text-[#141414] mb-2">
+              Bon retour <em className="text-[#7C3AED]">parmi nous</em>
+            </h1>
+            <p className="text-sm text-[#6B6960] mb-8">Connecte-toi pour accéder à tes réservations</p>
+
+            {/* Social buttons */}
+            <div className="flex flex-col gap-3 mb-6">
+              <button className="w-full flex items-center justify-center gap-3 px-4 py-3.5 bg-white border border-[#EFEDE8] rounded-xl text-sm font-medium text-[#141414] hover:bg-gray-50 transition-colors">
+                <GoogleIcon />
+                Continuer avec Google
+              </button>
+              <button className="w-full flex items-center justify-center gap-3 px-4 py-3.5 bg-[#141414] rounded-xl text-sm font-medium text-white hover:bg-black transition-colors">
+                <AppleIcon />
+                Continuer avec Apple
+              </button>
+            </div>
+
+            {/* Divider */}
+            <div className="flex items-center gap-3 mb-6 text-[#8A8880] text-xs">
+              <div className="flex-1 h-px bg-[#EFEDE8]" />
+              <span>ou</span>
+              <div className="flex-1 h-px bg-[#EFEDE8]" />
+            </div>
+
+            <LoginForm />
+
+            <p className="text-center text-sm text-[#6B6960] mt-6">
+              Pas encore de compte ?{' '}
+              <Link href="/signup" className="text-[#F97316] font-semibold hover:underline">
+                Créer un compte
+              </Link>
+            </p>
+
+            <p className="text-center text-sm text-[#6B6960] mt-4">
+              Prestataire ?{' '}
+              <Link href="/pour-les-pros" className="text-[#7C3AED] font-semibold hover:underline">
+                Espace pros →
+              </Link>
+            </p>
+          </div>
         </div>
-
-        <LoginForm />
-
-        <p className="text-center text-sm text-[#6B6960] mt-6">
-          Pas encore de compte ?{' '}
-          <Link href="/signup" className="text-[#F97316] font-semibold hover:underline">
-            Créer un compte
-          </Link>
-        </p>
-
-        <p className="text-center text-sm text-[#6B6960] mt-4">
-          Prestataire ?{' '}
-          <Link href="/pour-les-pros" className="text-[#7C3AED] font-semibold hover:underline">
-            Espace pros →
-          </Link>
-        </p>
       </div>
     </main>
   )

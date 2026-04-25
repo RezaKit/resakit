@@ -28,11 +28,13 @@ export default async function BookingSuccessPage({ searchParams }: PageProps) {
 
   return (
     <main
-      className="min-h-screen pb-32"
+      className="min-h-screen pb-32 md:pb-0"
       style={{ background: 'radial-gradient(600px 400px at 50% 0%, rgba(124,58,237,0.13), transparent 70%), #fff' }}
     >
+      <div className="md:max-w-2xl md:mx-auto md:px-8 md:py-16">
+
       {/* Close / home button */}
-      <div className="flex justify-end px-5 pt-16 pb-0">
+      <div className="flex justify-end px-5 pt-16 pb-0 md:pt-0">
         <Link
           href="/"
           className="w-[38px] h-[38px] rounded-full border border-[#EFEDE8] bg-white flex items-center justify-center"
@@ -180,9 +182,9 @@ export default async function BookingSuccessPage({ searchParams }: PageProps) {
         ))}
       </div>
 
-      {/* Sticky CTA */}
+      {/* CTA — sticky on mobile, inline on desktop */}
       <div
-        className="fixed bottom-0 inset-x-0 flex gap-2.5 px-5 pb-[34px] pt-[14px]"
+        className="fixed bottom-0 inset-x-0 md:relative md:bottom-auto md:inset-x-auto md:mt-8 md:mx-5 md:rounded-2xl flex gap-2.5 px-5 pb-[34px] pt-[14px] md:pb-[14px]"
         style={{
           background: 'rgba(255,255,255,0.96)',
           backdropFilter: 'blur(16px)',
@@ -204,6 +206,8 @@ export default async function BookingSuccessPage({ searchParams }: PageProps) {
             <path d="M5 12h14M13 5l7 7-7 7" />
           </svg>
         </Link>
+      </div>
+
       </div>
     </main>
   )
